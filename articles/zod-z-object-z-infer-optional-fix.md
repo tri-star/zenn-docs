@@ -3,7 +3,7 @@ title: "zodのz.objectをz.inferした結果がname?:stringのようにoptional�
 emoji: "👌"
 type: "tech" # tech: 技術記事 / idea: アイデア
 topics: ["zod", "typescript"]
-published: false
+published: true
 ---
 
 # 概要
