@@ -8,7 +8,7 @@ published: false
 
 ## 起きた問題
 
-TypeScript(ts-jest)、middy v5.2.4 を利用したプロジェクトで、middy のための Jest 用設定を行いテストを書いていたところ、`jest.mock()`によるモックが利用できなくなりました。
+TypeScript(ts-jest)、middy v5.2.4 を利用したプロジェクトで、middy のための Jest 用設定を行いテストを書いていたところ、`jest.mock()`によるモックが利用できなくなりました。(エラーは起きないが実装が上書きされない)
 
 jest.config.ts の `setupFilesAfterEnv` を通して以下を実行し、`sampleFunc()`の戻り値をモックしようとしていますが、モックが出来ない状態です。
 (middy とは関係のない部分で起きた事象だったため最初なにが原因か分かりませんでした)
