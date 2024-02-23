@@ -2,7 +2,7 @@
 title: "NativeESMのパッケージ(middy v5+)を含むプロジェクトでjest.mockが利用できない問題の対処"
 emoji: "🔬"
 type: "tech" # tech: 技術記事 / idea: アイデア
-topics: ["typescript", "jest", "NativeESM"]
+topics: ["typescript", "jest", "test"]
 published: false
 ---
 
