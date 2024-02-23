@@ -76,6 +76,7 @@ jest.mock("@/libs/sample-func", () => {
   jest.config.ts
 
   ```diff
+  + const esModules = ['@middy'].join('|')
     export default {
   +   preset: 'ts-jest/presets/default-esm',
       setupFilesAfterEnv: ['<rootDir>/src/libs/jest/setup-mock.ts'],
