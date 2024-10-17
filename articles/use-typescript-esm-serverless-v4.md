@@ -3,7 +3,7 @@ title: "Serverless Framework v4でLambdaの実装にTypeScript+ESMを使う"
 emoji: "📘"
 type: "tech" # tech: 技術記事 / idea: アイデア
 topics: ["TypeScript", "Serverless Framework", "AWS Lambda"]
-published: false
+published: true
 ---
 
 ## 概要
@@ -109,7 +109,7 @@ v4 では `build.esbuild` の設定で esbuild に渡すオプションをほぼ
 `package.patterns` で package.json を含めない場合、 `serverless package` コマンドで生成される内容は以下のようになります。
 
 ```bash
-ls -l .serverless/build
+tree .serverless/build
 
 .serverless/build
 ├── example-app.zip
