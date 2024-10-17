@@ -29,8 +29,7 @@ v4 で ESBuild でトランスパイルを行う設定は以下に記述があ�
   },
 ```
 
-<details>
-<summary>serverless.ts全体の例</summary>
+:::details serverless.ts 全体の例
 
 ```ts
 // Requiring @types/serverless in your project package.json
@@ -82,7 +81,7 @@ const serverlessConfiguration: Serverless = {
 module.exports = serverlessConfiguration;
 ```
 
-</details>
+:::
 
 以下はこの件の詳細です。
 
@@ -93,14 +92,15 @@ Node.js では JavaScript を ESM として実行するにはいくつかの条�
 - (A). package.json に `"type": "module"` が指定されている
 - (B). または、ファイルの拡張子が `.mjs` である
 
-幾つかの理由から、Serverless Framework v4 で JS を ESM 形式でトランスパイルして Lambda 用の zip ファイルを生成する場合、
-zip ファイルに `type: module` が記述された package.json を同梱する必要があります。
+幾つかの理由から、Serverless Framework v4 で JS を ESM 形式でトランスパイルして Lambda 用の zip ファイルを生成する場合、zip ファイルに `type: module` が記述された package.json を同梱する必要があります。
 
 これには Serverless Framework v4 が esbuild を通して JS をトランスパイルする際の以下の点が関係してきます。
 
-- (1). アプリケーションの package.json に `"type": "module"` 指定があると、esbuild の format オプションが `esm` に設定される
+- (1). アプリケーションを ESM で開発すると、esbuild のトランスパイル結果も ESM になる
+  アプリケーションの package.json に `"type": "module"` 指定があると、esbuild の format オプションが `esm` に設定されます。
   https://github.com/serverless/serverless/blob/73b3de8a6aeeedf942c1c6fc2314417c82f149b7/lib/plugins/esbuild/index.js#L361-L363
-- (2). TS コードを esbuild に渡す際の `outfile` オプションが以下の部分で拡張子 js に固定されている
+- (2). トランスパイル後の js ファイルの拡張子は js に固定される
+  TS コードを esbuild に渡す際の `outfile` オプションが以下の部分で拡張子 js に固定されています。
   https://github.com/serverless/serverless/blob/73b3de8a6aeeedf942c1c6fc2314417c82f149b7/lib/plugins/esbuild/index.js#L590-L594
 
 v4 では `build.esbuild` の設定で esbuild に渡すオプションをほぼ自由に指定できますが、上記の点は上書きすることが出来ません。
