@@ -122,7 +122,7 @@ ls -l .serverless/build
 ```
 
 package.json も含まれていて一見問題なさそうです。
-(この中には`"type": "module"` も含まれています)
+(この package.json には`"type": "module"` も含まれています)
 
 しかし、この状態で Lambda にデプロイして動作確認すると以下のエラーが発生します。
 
