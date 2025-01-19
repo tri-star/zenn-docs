@@ -14,6 +14,15 @@ Serverless Framework v4 では TypeScript がネイティブにサポートさ�
 v4.4.6 の時点では、serverless.ts をドキュメントに沿って書いているだけでは、
 TypeScript + ESM で記述した関数を Lambda にデプロイしても ESM 形式の JS を処理できずエラーになってしまったため、どう対処したかを残しておこうと思います。
 
+:::message
+2015-01-19 追記：
+
+[serverless/serverless#12872](https://github.com/serverless/serverless/pull/12872) の PR がマージされたため、この記事に掲載する手順は v4.4.8 以降不要になると思われます。
+
+- 参考 Issue: [[V4] Typescript with ESM support](https://github.com/serverless/serverless/issues/12706#issuecomment-2477211643)
+
+:::
+
 ## 結論
 
 v4 で ESBuild でトランスパイルを行う設定は以下に記述があります。
