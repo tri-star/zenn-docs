@@ -3,7 +3,7 @@ title: "Serverless Framework v4 のserverless.tsでStepFunctionsを書く時に�
 emoji: "📐"
 type: "tech" # tech: 技術記事 / idea: アイデア
 topics: ["TypeScript", "Serverless Framework", "Step Functions"]
-published: false
+published: true
 ---
 
 # 概要
