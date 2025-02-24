@@ -13,7 +13,7 @@ Lambda から X-Ray にトレースを送信する場合、Lambda に標準で�
 ただこの方法だとトレースを確認できるのは AWS のマネコンや Baselime など一部のツールに限られてしまいます。
 OpenTelemetry でトレースを扱い、最後に X-Ray 向けに送信しておく(X-Ray 用の Exporter を使う)ことで、トレース情報を扱うバックエンドが容易に切り替えられるようになると思い、X-Ray ではなく OpenTelemetry を使う場合はどうなるのか試してみました。
 
-# 最短で達成する方法
+# 最短で達成する方法：公式の Lambda レイヤーを利用する
 
 AWS では ADOT(AWS Distro for OpenTelemetry)が OpenTelemetry の[ディストリビューション](https://opentelemetry.io/docs/concepts/distributions/)があり、Lambda 用には [Lambda レイヤー](https://aws-otel.github.io/docs/getting-started/lambda/lambda-js#enable-auto-instrumentation-for-your-lambda-function) が公開されています。
 
@@ -41,9 +41,16 @@ AWS が公式で配布しているレイヤーのサイズを調べる方法が�
 
 ※1： [aws-observability/aws-otel-lambda](https://github.com/aws-observability/aws-otel-lambda)を clone して Node.js 用にビルド、レイヤーに関わる部分のサイズを確認していますが、正確には把握できていません。
 
-# OpenTelemetry のコンポーネントを自分で組み立てる
+# 別の方法：OpenTelemetry のコンポーネントを自分で組み立てる
 
-公式の Lambda レイヤーは色々なものに備えて Fat になっていますが、OpenTelemetry の SDK は「何をどのように計装するか」を細かく自分で制御出来るようになっています。
-このため、以下のような組み合わせで独自の Lambda レイヤーを用意すれば容量を節約しながら OTLP を用いた計装が可能です。
+公式の Lambda レイヤーは色々なモジュール/ライブラリを自動計装出来るようにするためファットになっていますが、OpenTelemetry の SDK は「何をどのように計装するか」を細かく自分で制御出来るようになっています。
 
-# 最終的に必要になるもの
+このため、自分に必要なモジュール/ライブラリだけを利用したカスタムのレイヤーを作ることで、サイズを抑えつつ必要なトレース情報を X-Ray に送信することが出来ます。
+
+今回はこちらの方法を試してみました。
+
+# 最終的に用意するもの
+
+2025 年 2 月時点では、以下のような組み合わせで動作することを確認しました。
+
+![](/images/send-trace-data-from-lambda/custom-layer-image.png)
