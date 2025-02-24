@@ -1,0 +1,83 @@
+<mxfile host="65bd71144e">
+    <diagram id="r2UG0uWUm2mJFX_hxBto" name="Page-1">
+        <mxGraphModel dx="1649" dy="1139" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" background="#ffffff" math="0" shadow="0">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" style="" parent="0"/>
+                <UserObject label="Lambda Container" tags="test" id="2">
+                    <mxCell style="whiteSpace=wrap;html=1;align=left;verticalAlign=top;rounded=0;" parent="1" vertex="1">
+                        <mxGeometry x="60" y="330" width="700" height="460" as="geometry"/>
+                    </mxCell>
+                </UserObject>
+                <mxCell id="16" value="Lambda Internal layer" style="" parent="0"/>
+                <mxCell id="17" value="Lambda Extension" style="whiteSpace=wrap;html=1;align=left;verticalAlign=top;fillColor=#fff2cc;strokeColor=#d6b656;rounded=0;" parent="16" vertex="1">
+                    <mxGeometry x="490" y="400" width="230" height="320" as="geometry"/>
+                </mxCell>
+                <mxCell id="18" value="Lambda Runtime" style="whiteSpace=wrap;html=1;align=left;verticalAlign=top;rounded=0;" parent="16" vertex="1">
+                    <mxGeometry x="80" y="400" width="260" height="320" as="geometry"/>
+                </mxCell>
+                <mxCell id="32" value="" style="whiteSpace=wrap;html=1;align=left;verticalAlign=top;fillColor=#fff2cc;strokeColor=#d6b656;rounded=0;" parent="16" vertex="1">
+                    <mxGeometry x="60" y="280" width="30" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="33" value="ADOT用Lambda Layer関係部分" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;rounded=0;" parent="16" vertex="1">
+                    <mxGeometry x="90" y="280" width="190" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="34" value="ADOT用Lambda Layerを利用した場合の動作イメージ" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;fontSize=20;fontStyle=5;rounded=0;" parent="16" vertex="1">
+                    <mxGeometry x="-120" y="200" width="510" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="3" value="Diagrams" style="" parent="0"/>
+                <mxCell id="9" value="AWS_LAMBDA_EXEC_WRAPPER=/opt/otel-handler" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;rounded=0;" parent="3" vertex="1">
+                    <mxGeometry x="70" y="360" width="310" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="11" value="AWS Lambda" style="sketch=0;outlineConnect=0;fontColor=#232F3E;gradientColor=none;strokeColor=#ffffff;fillColor=#232F3E;dashed=0;verticalLabelPosition=middle;verticalAlign=bottom;align=center;html=1;whiteSpace=wrap;fontSize=10;fontStyle=1;spacing=3;shape=mxgraph.aws4.productIcon;prIcon=mxgraph.aws4.lambda;rounded=0;" parent="3" vertex="1">
+                    <mxGeometry x="-110" y="440" width="80" height="100" as="geometry"/>
+                </mxCell>
+                <mxCell id="4" value="/var/task/" style="whiteSpace=wrap;html=1;align=left;verticalAlign=top;rounded=0;" parent="3" vertex="1">
+                    <mxGeometry x="110" y="430" width="150" height="120" as="geometry"/>
+                </mxCell>
+                <mxCell id="21" style="edgeStyle=none;html=1;rounded=0;" parent="3" source="6" target="20" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="24" value="&lt;div&gt;&lt;span style=&quot;color: rgb(63, 63, 63);&quot;&gt;HTTP: http://localhost:4317&lt;/span&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;span style=&quot;color: rgb(63, 63, 63);&quot;&gt;または&lt;/span&gt;&lt;/div&gt;gRPC: http://localhost:4318" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];rounded=0;" parent="21" vertex="1" connectable="0">
+                    <mxGeometry x="-0.5091" y="-3" relative="1" as="geometry">
+                        <mxPoint x="76" y="25" as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="6" value="handler.js" style="whiteSpace=wrap;html=1;rounded=0;" parent="3" vertex="1">
+                    <mxGeometry x="140" y="475" width="90" height="35" as="geometry"/>
+                </mxCell>
+                <mxCell id="7" value="/opt/" style="whiteSpace=wrap;html=1;align=left;verticalAlign=top;fillColor=#fff2cc;strokeColor=#d6b656;rounded=0;" parent="3" vertex="1">
+                    <mxGeometry x="110" y="580" width="150" height="120" as="geometry"/>
+                </mxCell>
+                <mxCell id="13" style="edgeStyle=none;html=1;rounded=0;" parent="3" source="8" target="6" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="8" value="otel-handler" style="whiteSpace=wrap;html=1;rounded=0;" parent="3" vertex="1">
+                    <mxGeometry x="125" y="620" width="95" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="12" style="edgeStyle=none;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;rounded=0;" parent="3" source="11" target="8" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="29" style="edgeStyle=none;html=1;rounded=0;" parent="3" source="20" target="27" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="20" value="ADOT Collector" style="whiteSpace=wrap;html=1;rounded=0;" parent="3" vertex="1">
+                    <mxGeometry x="510" y="470" width="120" height="45" as="geometry"/>
+                </mxCell>
+                <mxCell id="27" value="AWS X-Ray" style="sketch=0;outlineConnect=0;fontColor=#232F3E;gradientColor=none;strokeColor=#ffffff;fillColor=#232F3E;dashed=0;verticalLabelPosition=middle;verticalAlign=bottom;align=center;html=1;whiteSpace=wrap;fontSize=10;fontStyle=1;spacing=3;shape=mxgraph.aws4.productIcon;prIcon=mxgraph.aws4.xray;rounded=0;" parent="3" vertex="1">
+                    <mxGeometry x="800" y="442" width="80" height="100" as="geometry"/>
+                </mxCell>
+                <mxCell id="22" value="Callout" style="" parent="0"/>
+                <mxCell id="23" value="&lt;div&gt;&lt;span style=&quot;color: rgb(63, 63, 63);&quot;&gt;・&lt;/span&gt;&lt;span style=&quot;color: rgb(0, 0, 0); text-align: center; text-wrap: nowrap; background-color: transparent;&quot;&gt;AWS_LAMBDA_EXEC_WRAPPER環境変数で&lt;/span&gt;&lt;/div&gt;&lt;div&gt;&lt;span style=&quot;color: rgb(0, 0, 0); text-align: center; text-wrap: nowrap; background-color: transparent;&quot;&gt;　先にLayer側のスクリプトを読み込み&lt;/span&gt;&lt;/div&gt;&lt;div&gt;&lt;span style=&quot;color: rgb(63, 63, 63);&quot;&gt;・環境変数などからTraceId, 親SpanIdを抽出&lt;/span&gt;&lt;br&gt;&lt;/div&gt;・スパンを開始&lt;div&gt;&lt;span style=&quot;background-color: transparent;&quot;&gt;・各種ミドルウェアの自動計装を開始&lt;/span&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;・その後、本来の/var/task/handler.jsを実行&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;" style="whiteSpace=wrap;html=1;dashed=1;align=left;verticalAlign=top;rounded=0;" parent="22" vertex="1">
+                    <mxGeometry x="130" y="670" width="280" height="100" as="geometry"/>
+                </mxCell>
+                <mxCell id="28" value="&lt;div&gt;トレース情報の送信&lt;/div&gt;" style="whiteSpace=wrap;html=1;dashed=1;align=center;verticalAlign=middle;rounded=0;" parent="22" vertex="1">
+                    <mxGeometry x="280" y="450" width="190" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="30" value="&lt;div&gt;・OTLPのトレース情報を受け取り&lt;/div&gt;&lt;div&gt;・AWS X-Ray SDKでX-Rayに送信&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;" style="whiteSpace=wrap;html=1;dashed=1;align=left;verticalAlign=top;rounded=0;" parent="22" vertex="1">
+                    <mxGeometry x="510" y="530" width="200" height="40" as="geometry"/>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+</mxfile>
