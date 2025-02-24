@@ -1,0 +1,40 @@
+<mxfile host="65bd71144e">
+    <diagram id="x6wakUmGjf9UNVlYQ0Gy" name="Page-1">
+        <mxGraphModel dx="799" dy="1104" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" background="#ffffff" math="0" shadow="0">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <mxCell id="2" value="・X-RayのトレースID、スパンIDの検出と注入" style="whiteSpace=wrap;html=1;align=left;verticalAlign=top;" vertex="1" parent="1">
+                    <mxGeometry x="200" y="160" width="260" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="3" value="公式版レイヤー" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;fontSize=17;" vertex="1" parent="1">
+                    <mxGeometry x="245" y="100" width="140" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="4" value="Propagator" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;fontSize=16;fontStyle=1" vertex="1" parent="1">
+                    <mxGeometry x="80" y="175" width="100" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="5" value="Instrumentation" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;fontSize=16;fontStyle=1" vertex="1" parent="1">
+                    <mxGeometry x="50" y="280" width="130" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="6" value="様々なサービスの自動計装" style="whiteSpace=wrap;html=1;align=left;verticalAlign=top;" vertex="1" parent="1">
+                    <mxGeometry x="200" y="280" width="260" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="8" value="Exporter" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;fontSize=16;fontStyle=1" vertex="1" parent="1">
+                    <mxGeometry x="90" y="400" width="80" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="9" value="カスタム版&lt;span style=&quot;color: rgb(0, 0, 0);&quot;&gt;レイヤー&lt;/span&gt;" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;fontSize=17;" vertex="1" parent="1">
+                    <mxGeometry x="570" y="100" width="180" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="10" value="" style="shape=singleArrow;whiteSpace=wrap;html=1;arrowWidth=0.3;arrowSize=0.35;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+                    <mxGeometry x="480" y="160" width="80" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="11" value="・X-RayのトレースID、スパンIDの検出と注入" style="whiteSpace=wrap;html=1;align=left;verticalAlign=top;" vertex="1" parent="1">
+                    <mxGeometry x="580" y="160" width="260" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="13" value="・" style="whiteSpace=wrap;html=1;align=left;verticalAlign=top;" vertex="1" parent="1">
+                    <mxGeometry x="200" y="400" width="260" height="60" as="geometry"/>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+</mxfile>
