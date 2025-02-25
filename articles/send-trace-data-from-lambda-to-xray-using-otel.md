@@ -2,7 +2,7 @@
 title: "LambdaからOTELを使いX-Rayにトレース情報を送信する方法とその仕組み"
 emoji: "☁️"
 type: "tech" # tech: 技術記事 / idea: アイデア
-topics: ["AWS", "Lambda", "OTEL", "X-Ray"]
+topics: ["AWS", "Lambda", "OTEL", "XRay"]
 published: false
 ---
 
@@ -15,19 +15,19 @@ OpenTelemetry でトレースを扱い、最後に X-Ray 向けに送信して�
 
 # 最短で達成する方法：公式の Lambda レイヤーを利用する
 
-AWS では ADOT(AWS Distro for OpenTelemetry)が OpenTelemetry の[ディストリビューション](https://opentelemetry.io/docs/concepts/distributions/)があり、Lambda 用には [Lambda レイヤー](https://aws-otel.github.io/docs/getting-started/lambda/lambda-js#enable-auto-instrumentation-for-your-lambda-function) が公開されています。
+AWS には ADOT(AWS Distro for OpenTelemetry)という OpenTelemetry の[ディストリビューション](https://opentelemetry.io/docs/concepts/distributions/)があり、Lambda 用に [Lambda レイヤー](https://aws-otel.github.io/docs/getting-started/lambda/lambda-js#enable-auto-instrumentation-for-your-lambda-function) が公開されています。
 
 このレイヤーを指定することで、Express, Redis, PostgreSQL など様々なミドルウェアのトレースが自動的に収集され X-Ray に送信されるようになっています。
-この方法での導入方法は以下に公式のドキュメントがあります。
 
-- [AWS Distro for OpenTelemetry Lambda Support For JavaScript](https://aws-otel.github.io/docs/getting-started/lambda/lambda-js#add-the-arn-of-the-lambda-layer)
+- 公式のレイヤーを追加して組み込む場合の手順
+  - [AWS Distro for OpenTelemetry Lambda Support For JavaScript](https://aws-otel.github.io/docs/getting-started/lambda/lambda-js#add-the-arn-of-the-lambda-layer)
 
-レイヤーを追加することで以下のようなイメージでアプリケーション側に改修を加えることなく OTLP のトレース情報を X-Ray に送信することが出来ます。
+この方法では以下のようなイメージでアプリケーション側に改修を加えることなく OTLP のトレース情報を X-Ray に送信することが出来ます。
 
 ![](/images/send-trace-data-from-lambda/adot-lambda-layer-diagram.png)
 
 この方法で問題になるのが、レイヤーのサイズが大きいことによる Lambda の 250MB のサイズ制限です。
-レイヤーを追加することによる導入方法も一般的だと思いますが、今回はこの記事では扱いません。
+公式のレイヤーを追加することによる導入方法は一般的だと思いますが、今回はこの記事では扱いません。
 (自分のケースでは、この方法では容量制限を超過してしまいました)
 
 AWS が公式で配布しているレイヤーのサイズを調べる方法が分からないのですが、おそらく以下のような形で 100MB 以上(160MB?)を占めると思われます。(※1)
@@ -54,13 +54,17 @@ AWS が公式で配布しているレイヤーのサイズを調べる方法が�
 2025 年 2 月時点では、以下のような組み合わせで動作することを確認しました。
 公式のレイヤーを利用しない場合でも、以下のように 2 つの要素を用意する必要があります(理由は後述します)。
 
+- (1). OpenTelemetry SDK を初期化しトレースを開始するスクリプト(Node.js 実装)
+  - この時点では X-Ray には送信せず、HTTP で(2)の Collector にトレース情報を送ります。
+- (2). トレース情報を受け取り AWS X-Ray SDK で X-Ray に送信する Lambda Extension(Go 実装。実体は OpenTelemetry Collector)
+
 ![](/images/send-trace-data-from-lambda/custom-layer-image.png)
 
-## (1). Lambda ハンドラーの実行前に読み込むスクリプト
+## (1). OpenTelemetry SDK を初期化しトレースを開始するスクリプト
 
 ハンドラー関数の開始前に OpenTelemetry SDK を初期化し、トレース情報を収集、後続のカスタムの Collector に OTLP でトレースを送信するためのスクリプトです。
 
-`NODE_OPTIONS=--import=otel-setup.mjs` を指定しておくことでプリロードされるようにしておきます。
+`NODE_OPTIONS=--import=/opt/nodejs/otel-setup.mjs` を指定しておくことでプリロードされるようにしておきます。
 
 手順は ADOT のサイトの以下のドキュメントを参考にしたものがベースになっています。
 
@@ -174,12 +178,79 @@ ESM を扱う上での注意事項は以下に記述されていました。
 
 ## (2). カスタムの Collector
 
-OTLP のトレース情報を AWS X-Ray SDK を通して X-Ray に送信する役割を持っています。
+Node.js から OTLP のトレース情報を受け取り、AWS X-Ray SDK を通して X-Ray に送信する役割を持っています。
 
-(1)のコード内で BatchSpanProcessor などを使いつつ直接 X-Ray に送信する Exporter を使えば(2)は不要になると思ったのですが、
-Lambda のフリーズ/再開など
+この部分を一から実装することは難しいことと、Lambda 用にこのような処理を行う OpenTelemetry Collector が以下で公開されており、以下をベースとしています。
 
-<!--
-OTLP のトレースを X-Ray SDK で送信する exporter として [awsxrayexporter](https://github.com/open-telemetry/opentelemetry-collector-contrib/blob/main/exporter/awsxrayexporter/awsxray.go) がありますが、これが Go で実装されていることと、
-Lambda Extension として動作することで Lambda 関数の freeze などにも関与出来るようにするため実装が分かれているようです。
--->
+- [OpenTelemetry Collector AWS Lambda Extension layer](https://github.com/open-telemetry/opentelemetry-lambda/tree/6a8b279f6f16d3747f2ca509ab53447f763801f1/collector)
+  - 2025 年 2 月時点では、この Collector の実装には今回の目的である「AWS X-Ray 向けにトレースをエクスポートする」実装が含まれていません。
+  - `make package` や `make publish-layer` でレイヤーのビルドや公開が実行出来るようになっています。
+- [AWS managed OpenTelemetry Lambda Layers /adot/collector/lambdacomponents](https://github.com/aws-observability/aws-otel-lambda/tree/main/adot/collector/lambdacomponents)
+  - こちらは AWS Lambda Extension layer と似た実装になっていて awsxrayexporter が含まれていますが、独立してビルドすることが出来ません。
+
+今回は上記の "OpenTelemetry Collector AWS Lambda Extension layer"をフォークする形で X-Ray へのエクスポートに対応したバージョンを用意しました。
+この方法でビルドした Collector は 45MB 程のサイズになっています。
+
+TODO: fork したリポジトリの URL を掲載
+
+::: message
+(1)のコード内で 直接 X-Ray に送信する Exporter を使えば(2)は不要になると思ったのですが、そのような形を取っていない理由について明記されたドキュメントを見つけることが出来ませんでした。
+
+- ネイティブなバイナリで実装されていた方がパフォーマンスが良い
+- 再送などの処理をアプリケーションとは別のプロセスで行うことでアプリケーション側の負荷が軽くなり、実装もシンプルになる
+
+:::
+
+## デプロイ時に行うこと
+
+前述の 2 つのレイヤーは事前に何らかの方法でデプロイしているとして、Lambda 関数を Serverless Framework でデプロイする場合は以下のような指定を行います。
+
+serverless.ts
+
+```ts
+// serverless.ts
+const serverlessConfiguration: Serverless = {
+  provider: {
+    environment: {
+      NODE_OPTIONS: "--import=/opt/nodejs/otel-setup.mjs",
+    },
+    layers: [
+      "arn:aws:lambda:${env:AWS_REGION}:${env:AWS_ACCOUNT}:layer:otel-collector:1",
+      "arn:aws:lambda:${env:AWS_REGION}:${env:AWS_ACCOUNT}:layer:common:1",
+    ],
+    // CollectorがAWS X-Ray SDKを使用してX-Rayに送信するので、IAM 権限が必要
+    iamRoleStatements: [
+      {
+        Effect: "Allow",
+        Action: ["xray:PutTraceSegments", "xray:PutTelemetryRecords"],
+        Resource: "*",
+      },
+    ],
+  },
+};
+
+module.exports = serverlessConfiguration;
+```
+
+::: message
+Go の LambdaExtension と Node.js でレイヤーを 2 つに分けていますが、公式レイヤーのようにこの 2 つを 1 つにまとめることも出来ると思います。
+:::
+
+::: message
+改めて記事にまとめたいこと
+
+- OTEL の登場人物はこんな感じ
+- Lambda 関数の目線で見ると、まず SDK を初期化してスパンを開始するところから始まる
+- 作成したスパンは Processor, Exporter に渡され送信される
+  - Node.js 用の Processor としては BatchProcessor などがある
+- この時点のスパンを見ると、parentSpanId が設定されていない
+  - TraceId が X-Ray 用のフォーマットにもなっていない
+- 実はスパンを作成する前に Propagation という仕組みが動いている
+  - Propagator には inject, extract というメソッドがあり、トレースのコンテキストに情報を埋め込んだり抽出することが出来る
+  - Propagator は AwsLambdaInstrumentation という Lambda を自動計装する仕組みの中で実行されている
+    - このため、実際にはこの処理が一番最初に実行されることで X-Ray 経由で発行されたトレース ID、スパン ID と繋がるようになっている
+- Lambda 関数が内部で fetch などの関数経由で別の Lambda 関数を呼び出す場合、
+  呼び出された側の Lambda 関数はトレース ID を引き継いで繋がらなければならない。
+  この部分は UndiciInstrumentation というライブラリが行っている
+  - Node.js の fetch は内部では undici というライブラリが使われており、
+    :::
