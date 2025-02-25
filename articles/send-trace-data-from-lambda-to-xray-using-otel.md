@@ -58,11 +58,42 @@ AWS が公式で配布しているレイヤーのサイズを調べる方法が�
 
 ## (1). Lambda ハンドラーの実行前に読み込むスクリプト
 
-ハンドラー関数の開始前に OpenTelemetry SDK を初期化し、トレース情報を収集するための設定を行います。
+ハンドラー関数の開始前に OpenTelemetry SDK を初期化し、トレース情報を収集、後続のカスタムの Collector に OTLP でトレースを送信するためのスクリプトです。
+
+`NODE_OPTIONS=--import=otel-setup.mjs` を指定しておくことでプリロードされるようにしておきます。
 
 手順は ADOT のサイトの以下のドキュメントを参考にしたものがベースになっています。
 
 - [Tracing with the AWS Distro for OpenTelemetry JavaScript SDK and X-Ray](https://aws-otel.github.io/docs/getting-started/js-sdk/trace-manual-instr#setting-up-the-global-tracer)
+
+:::details package.json
+
+```json
+{
+  "name": "common-layer",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "type": "module",
+  "dependencies": {
+    "@opentelemetry/api": "^1.9.0",
+    "@opentelemetry/id-generator-aws-xray": "^1.2.2",
+    "@opentelemetry/instrumentation-aws-lambda": "^0.50.3",
+    "@opentelemetry/instrumentation-undici": "^0.10.0",
+    "@opentelemetry/propagator-aws-xray-lambda": "^0.53.2",
+    "@opentelemetry/resource-detector-aws": "^1.11.0",
+    "@opentelemetry/resources": "^1.30.1",
+    "@opentelemetry/sdk-node": "^0.57.2",
+    "@opentelemetry/sdk-trace-base": "^1.30.1",
+    "@opentelemetry/semantic-conventions": "^1.30.0",
+    "@prisma/instrumentation": "^6.4.1"
+  }
+}
+```
+
+:::
 
 otel-setup.mjs
 
@@ -141,31 +172,14 @@ ESM を扱う上での注意事項は以下に記述されていました。
 - [use module.register(...) in recommended bootstrap code for ESM](https://github.com/open-telemetry/opentelemetry-js/issues/4933)
   - Node.js v18.19, 20.6、22 以降では ESM のプリロード方法として--experimental-loader ではなく--import と register()が推奨される件が記述されています。
 
-:::details package.json
+## (2). カスタムの Collector
 
-```json
-{
-  "name": "common-layer",
-  "version": "1.0.0",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "type": "module",
-  "dependencies": {
-    "@opentelemetry/api": "^1.9.0",
-    "@opentelemetry/id-generator-aws-xray": "^1.2.2",
-    "@opentelemetry/instrumentation-aws-lambda": "^0.50.3",
-    "@opentelemetry/instrumentation-undici": "^0.10.0",
-    "@opentelemetry/propagator-aws-xray-lambda": "^0.53.2",
-    "@opentelemetry/resource-detector-aws": "^1.11.0",
-    "@opentelemetry/resources": "^1.30.1",
-    "@opentelemetry/sdk-node": "^0.57.2",
-    "@opentelemetry/sdk-trace-base": "^1.30.1",
-    "@opentelemetry/semantic-conventions": "^1.30.0",
-    "@prisma/instrumentation": "^6.4.1"
-  }
-}
-```
+OTLP のトレース情報を AWS X-Ray SDK を通して X-Ray に送信する役割を持っています。
 
-:::
+(1)のコード内で BatchSpanProcessor などを使いつつ直接 X-Ray に送信する Exporter を使えば(2)は不要になると思ったのですが、
+Lambda のフリーズ/再開など
+
+<!--
+OTLP のトレースを X-Ray SDK で送信する exporter として [awsxrayexporter](https://github.com/open-telemetry/opentelemetry-collector-contrib/blob/main/exporter/awsxrayexporter/awsxray.go) がありますが、これが Go で実装されていることと、
+Lambda Extension として動作することで Lambda 関数の freeze などにも関与出来るようにするため実装が分かれているようです。
+-->
